@@ -1,18 +1,59 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { useContext, useState } from "react";
 import { NextPage, GetStaticPaths, GetStaticProps } from "next";
+import { useRouter } from "next/router"
+
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 
 import { ShopLayout } from "../../components/layouts"
-import { ItemCouter } from "../../components/ui";
 import { ProductSlideshow, SizeSelector } from "../../components/products";
+import { ItemCouter } from "../../components/ui";
 
-import { IProduct } from "../../interfaces";
 import { dbProducts } from "../../database";
+import { ICartProduct, IProduct, ISize } from "../../interfaces";
+import { CartContext } from "../../context";
 
 interface Props {
     product: IProduct;
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+
+    const router = useRouter()
+    const { addProductToCart } = useContext(CartContext)
+
+
+    const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+        _id: product._id,
+        image: product.images[0],
+        price: product.price,
+        size: undefined,
+        slug: product.slug,
+        title: product.title,
+        gender: product.gender,
+        quantity: 1,
+    })
+
+    const selectedSize = (size: ISize) => {
+        setTempCartProduct(currentProduct => ({
+            ...currentProduct,
+            size
+        }))
+    }
+
+    const onUpdateQuantity = (quantity: number) => {
+        setTempCartProduct(currentProduct => ({
+            ...currentProduct,
+            quantity
+        }))
+    }
+
+    const onAddProduct = () => {
+        if (!tempCartProduct.size) return
+
+        //TODO: Agregar al carrito
+        addProductToCart(tempCartProduct)
+        //router.push('/cart')
+    }
 
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
@@ -29,17 +70,39 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                         <Typography variant="subtitle1" component="h2">${product.price}</Typography>
                         <Box sx={{ my: 2 }}>
                             <Typography variant="subtitle2">Cantidad</Typography>
-                            <ItemCouter />
+                            <ItemCouter
+                                correntValue={tempCartProduct.quantity}
+                                maxValue={product.inStock > 10 ? 10 : product.inStock}
+                                updatedQuantity={onUpdateQuantity}
+                            />
+
                             <SizeSelector
                                 // selectedSize={product.sizes[0]}
-                                sizes={product.sizes} />
+                                sizes={product.sizes}
+                                selectedSize={tempCartProduct.size}
+                                onSelectedSize={selectedSize}
+                            />
                         </Box>
 
-                        <Button color="secondary" className='circular-btn' >
-                            Agregar al carrito
-                        </Button>
-
-                        {/* <Chip label="No hay disponibles" color="error" variant="outlined" /> */}
+                        {
+                            (product.inStock > 0)
+                                ? (
+                                    <Button
+                                        color="secondary"
+                                        className='circular-btn'
+                                        onClick={onAddProduct}
+                                    >
+                                        {
+                                            tempCartProduct.size
+                                                ? 'Agregar al carrito'
+                                                : 'Seleccione una talla'
+                                        }
+                                    </Button>
+                                )
+                                : (
+                                    <Chip label="No hay disponibles" color="error" variant="outlined" />
+                                )
+                        }
 
                         <Box sx={{ mt: 3 }}>
                             <Typography variant="subtitle2">Descripción</Typography>

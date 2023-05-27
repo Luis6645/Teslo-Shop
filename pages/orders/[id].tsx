@@ -1,9 +1,13 @@
 import { Box, Button, Card, CardContent, Chip, Divider, Grid, Link, Typography } from "@mui/material"
+import dynamic from "next/dynamic"
 
 import { ShopLayout } from "../../components/layouts"
-import { CartList, OrdenSummary } from "../../components/cart"
+import { OrdenSummary } from "../../components/cart"
 import NextLink from 'next/link';
 import { CreditCardOffOutlined, CreditScoreOutlined } from "@mui/icons-material";
+
+const CartList = dynamic(() => import("../../components/cart").then(i => i.CartList), { ssr: false, });
+
 
 const OrderPage = () => {
     return (
