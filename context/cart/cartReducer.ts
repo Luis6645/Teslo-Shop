@@ -1,6 +1,5 @@
 import { ICartProduct } from '../../interfaces';
 import { CartState } from './';
-import Product from '../../models/Product';
 
 type CartActionType =
     | { type: '[Cart] - LoadCart from cookies | storage', payload: ICartProduct[] }
