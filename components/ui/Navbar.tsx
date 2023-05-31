@@ -24,7 +24,7 @@ export const Navbar = () => {
     return (
         <AppBar>
             <Toolbar>
-                <NextLink href='/' passHref>
+                <NextLink href='/' passHref legacyBehavior>
                     <Link display='flex' alignItems='center'>
                         <Typography variant='h6'>Teslo |</Typography>
                         <Typography sx={{ ml: 0.5 }}>Shop</Typography>
@@ -35,17 +35,17 @@ export const Navbar = () => {
                 <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }}
                     className='fadeIn'
                 >
-                    <NextLink href='/category/men' passHref>
+                    <NextLink href='/category/men' passHref legacyBehavior>
                         <Link>
                             <Button color={asPath === '/category/men' ? 'primary' : 'info'}>Hombres</Button>
                         </Link>
                     </NextLink>
-                    <NextLink href='/category/women' passHref>
+                    <NextLink href='/category/women' passHref legacyBehavior>
                         <Link>
                             <Button color={asPath === '/category/women' ? 'primary' : 'info'}>Mujeres</Button>
                         </Link>
                     </NextLink>
-                    <NextLink href='/category/kid' passHref>
+                    <NextLink href='/category/kid' passHref legacyBehavior>
                         <Link>
                             <Button color={asPath === '/category/kid' ? 'primary' : 'info'}>Niños</Button>
                         </Link>
@@ -97,8 +97,8 @@ export const Navbar = () => {
                     <SearchOutlined />
                 </IconButton>
 
-                <NextLink href='/cart' passHref>
-                    <Link >
+                <NextLink href='/cart' passHref legacyBehavior>
+                    <Link>
                         <IconButton>
                             <Badge badgeContent={numberOfItems > 9 ? '+9' : numberOfItems} color="secondary">
                                 <ShoppingCartOutlined />

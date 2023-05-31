@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Box, Button, Card, CardContent, Divider, Grid, Link, Typography } from "@mui/material"
 import NextLink from 'next/link';
 import dynamic from "next/dynamic";
@@ -7,13 +7,23 @@ import { ShopLayout } from "../../components/layouts"
 import { OrdenSummary } from "../../components/cart"
 import { CartContext } from "../../context";
 import { countries } from "../../utils";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 
 const CartList = dynamic(() => import("../../components/cart").then(i => i.CartList), { ssr: false, });
 
 const SummaryPage = () => {
 
+    const router = useRouter()
     const { shippingAddress, numberOfItems } = useContext(CartContext)
+
+    useEffect(() => {
+        if (!Cookies.get('firstName')) {
+            router.push('/checkout/address')
+        }
+    }, [router])
+
 
     if (!shippingAddress) {
         return (<></>)
@@ -37,7 +47,7 @@ const SummaryPage = () => {
 
                             <Box display='flex' justifyContent='space-between'>
                                 <Typography variant='subtitle1'>Dirección de entrega</Typography>
-                                <NextLink href='/checkout/address' passHref>
+                                <NextLink href='/checkout/address' passHref legacyBehavior>
                                     <Link underline="always">
                                         Editar
                                     </Link>
@@ -53,7 +63,7 @@ const SummaryPage = () => {
                             <Divider sx={{ my: 1 }} />
 
                             <Box display='flex' justifyContent='end'>
-                                <NextLink href='/cart' passHref>
+                                <NextLink href='/cart' passHref legacyBehavior>
                                     <Link underline="always">
                                         Editar
                                     </Link>
