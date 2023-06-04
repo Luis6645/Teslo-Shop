@@ -4,7 +4,7 @@ import { getSession } from 'next-auth/react';
 import NextLink from 'next/link';
 
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Typography, Grid, Chip, Link, Button } from '@mui/material';
+import { Typography, Grid, Chip, Link } from '@mui/material';
 
 import { ShopLayout } from '../../components/layouts'
 import { dbOrders } from '../../database';
