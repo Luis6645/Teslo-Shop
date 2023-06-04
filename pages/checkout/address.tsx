@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { useRouter } from "next/router"
-import { Box, Button, FormControl, Grid, MenuItem, TextField, Typography } from "@mui/material"
+import { Box, Button, FormControl, Grid, MenuItem, NoSsr, TextField, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import Cookies from "js-cookie"
 
@@ -37,7 +37,7 @@ const AddressPage = () => {
 
     const { updateAddress } = useContext(CartContext)
 
-    const { register, handleSubmit, formState: { errors, defaultValues } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         defaultValues: getAddresFromCookies()
     });
 
@@ -137,28 +137,31 @@ const AddressPage = () => {
 
                     <Grid item xs={12} sm={6}>
                         <FormControl variant="filled" fullWidth>
-                            <TextField
-                                select
-                                variant="filled"
-                                label="País"
-                                defaultValue={defaultValues?.country}
-                                {...register('country',
+                            <NoSsr>
+                                <TextField
+                                    key={Cookies.get("country") || countries[0].code}
+                                    select
+                                    variant="filled"
+                                    label="País"
+                                    defaultValue={Cookies.get('country') || countries[0].code}
+                                    {...register('country',
+                                        {
+                                            required: 'Este campo es requerido',
+                                        }
+                                    )}
+                                    error={!!errors.country}
+                                    helperText={errors.country?.message}
+                                >
                                     {
-                                        required: 'Este campo es requerido',
+                                        countries.map(country => (
+                                            <MenuItem
+                                                key={country.code}
+                                                value={country.code}
+                                            >{country.name}</MenuItem>
+                                        ))
                                     }
-                                )}
-                                error={!!errors.country}
-                                helperText={errors.country?.message}
-                            >
-                                {
-                                    countries.map(country => (
-                                        <MenuItem
-                                            key={country.code}
-                                            value={country.code}
-                                        >{country.name}</MenuItem>
-                                    ))
-                                }
-                            </TextField>
+                                </TextField>
+                            </NoSsr>
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
