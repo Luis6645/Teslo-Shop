@@ -9,7 +9,7 @@ type Data =
     | { message: string }
     | IUser[]
 
-export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
     switch (req.method) {
         case 'GET':
@@ -27,7 +27,7 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const users = await User.find().select('-password').lean()
     await db.disconnect()
 
-    return res.status(201).json(users)
+    return res.status(200).json(users)
 }
 
 const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
@@ -54,6 +54,6 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await user.save()
     await db.disconnect()
 
-    return res.status(201).json({ message: 'Usuario actualizado' })
+    return res.status(200).json({ message: 'Usuario actualizado' })
 }
 

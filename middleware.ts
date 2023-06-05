@@ -52,6 +52,6 @@ export const config = {
     '/orders/:path*',
     '/api/orders/:path*',
     '/admin/:path*',
-    '/api/admin/:path*'
+    '/((?!api\/)/admin/:path.*)'
   ],
 };
