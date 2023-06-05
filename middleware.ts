@@ -16,12 +16,10 @@ export async function middleware(req: NextRequest) {
     url.search = `p=${requestedPage}`;
 
     if (requestedPage.includes('/api')) {
-      return new Response(JSON.stringify({ message: 'No autorizado' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      req.nextUrl.searchParams.set('from', req.nextUrl.pathname)
+      req.nextUrl.pathname = '/login'
+
+      return NextResponse.redirect(req.nextUrl)
     };
 
     return NextResponse.redirect(url);
@@ -29,12 +27,10 @@ export async function middleware(req: NextRequest) {
 
   if (requestedPage.includes('/api/admin') && !validRoles.includes(session.user.role)) {
 
-    return new Response(JSON.stringify({ message: 'No autorizado' }), {
-      status: 401,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    req.nextUrl.searchParams.set('from', req.nextUrl.pathname)
+    req.nextUrl.pathname = '/login'
+
+    return NextResponse.redirect(req.nextUrl)
   };
 
   if (requestedPage.includes('/admin') && !validRoles.includes(session.user.role)) {
